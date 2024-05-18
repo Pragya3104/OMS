@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div id="branding">
+                <h1>Organization Management System</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="{{ url_for('index') }}">Home</a></li>
+                    <li><a href="{{ url_for('logout') }}">Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <div class="container">
+        <h1>Welcome, {{ username }}</h1>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('add_employee') }}">Add Employee</a></li>
+                <li><a href="#" onclick="showEmployeeList()">View Employee List</a></li>
+            </ul>
+        </nav>
+        <div id="employee-list" style="display:none;">
+            <h2>Employee List</h2>
+            <ul id="employees"></ul>
+        </div>
+    </div>
+    <footer>
+        <div class="container">
+            <p>© 2024 Organization Management System. All rights reserved.</p>
+        </div>
+    </footer>
+    <script>
+        function showEmployeeList() {
+            fetch('{{ url_for("get_employee_list") }}')
+                .then(response => response.json())
+                .then(data => {
+                    const employeeList = document.getElementById('employees');
+                    employeeList.innerHTML = '';
+                    data.forEach(employee => {
+                        const li = document.createElement('li');
+                        li.textContent = `${employee.name} - ${employee.department}`;
+                        employeeList.appendChild(li);
+                    });
+                    document.getElementById('employee-list').style.display = 'block';
+                });
+        }
+    </script>
+</body>
+</html>
